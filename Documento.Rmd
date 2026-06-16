@@ -1,6 +1,6 @@
 ---
 title: "Evidencia | Proyecto integrador"
-author: "Diana Barreto, Sofía Ocampo Moreno"
+author: "Diana Barreto, Sofía Ocampo Moreno, Aaron Flores Cerón"
 date: "2026-06-16"
 output: html_document
 ---
@@ -48,10 +48,25 @@ El gen S es particularmente importante porque produce la proteína Spike, la res
 
 ### Datos a utilizar
 
+
 ### Procedimiento general
 
 
 ## Resultados 
+
+### Número de secuencias analizadas
+
+```{r}
+data.frame(
+  Pais = c("México","Estados Unidos","Reino Unido","China","Brasil"),
+  Secuencias = c(length(mexico),
+                 length(usa),
+                 length(uk),
+                 length(china),
+                 length(brazil))
+)
+```
+
 
 ## Conclusiones
 
