@@ -1,15 +1,35 @@
 ---
 title: "Evidencia | Proyecto integrador"
-author: "Diana Barreto"
+author: "Diana Barreto, Sofía Ocampo Moreno"
 date: "2026-06-16"
 output: html_document
 ---
 
-# Titulo
+# Comparación de mutaciones en el gen Spike del SARS-CoV-2 entre México y otras regiones del mundo durante 2021
 
 
 ## Introducción
 
+> La pandemia de COVID-19, causada por el virus SARS-CoV-2, generó una crisis sanitario como ninguna otra. Desde su identificación en el 2019, el virus ha acumulado mtaciones que han dado origen a diferentes variantes, cada una con características distintas, mayor transmibilidad o capacidad de evasión inmunológica por nombrar algunos.
+
+### Contexto
+
+> El genoma del SARS-CoV-2 contiene 11 genes pricipales:
+
+> - ORF1ab
+- S (Spike)
+- ORF3a
+- E (Envelope)
+- M (Membrane)
+- ORF6
+- ORF7a
+- ORF7b
+- ORF8
+- N (Nucleocapsid)
+- ORF10
+
+> El gen ORF1ab ocupa aproxiamdamente dos terceras partes del genoma y codifica proteínas involucradas en la replicación viral. Los genes S,E,M y N codifican las pricipales proteínas estructurales del virus.
+El gen S es particularmente importante porque produce la proteína Spike, la responsable de la entreda del virus a las células mediante interacción con el receptor ACE2. Debido a su papel en la infección y en la respuesta inmunitaria, esta región presenta numerosas mutaciones asociadas con variantes de interés
 
 ```{r}
 
@@ -18,9 +38,8 @@ output: html_document
 
 ## Hipótesis
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
+> Las secuencias del gen Spike del SARS-CoV-2 obtenidas en México durante 2021 compartirán mutaciones no sinónimas características con secuencias provenientes de Estados Unidos, Reino Unido, China y Brasil del mismo periodo, indicando la circulación internacional de lineajes virales relacionados. Sin embargo, también se obsevarán diferencias regionales asociadas a la prevalencia local de variantes específicas.
+```{r}
 
 ```
 
