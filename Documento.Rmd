@@ -10,11 +10,11 @@ output: html_document
 
 ## Introducción
 
-> La pandemia de COVID-19, causada por el virus SARS-CoV-2, generó una crisis sanitario como ninguna otra. Desde su identificación en el 2019, el virus ha acumulado mtaciones que han dado origen a diferentes variantes, cada una con características distintas, mayor transmibilidad o capacidad de evasión inmunológica por nombrar algunos.
+> La pandemia de COVID-19, causada por el virus SARS-CoV-2, generó una crisis sanitaria como ninguna otra. Desde su identificación en el 2019, el virus ha acumulado mutaciones que han dado origen a diferentes variantes, cada una con características distintas, mayor transmisibilidad o capacidad de evasión inmunológica, entre otras características..
 
 ### Contexto
 
-> El genoma del SARS-CoV-2 contiene 11 genes pricipales:
+> El genoma del SARS-CoV-2 contiene 11 genes principales:
 
 > - ORF1ab
 - S (Spike)
@@ -28,34 +28,63 @@ output: html_document
 - N (Nucleocapsid)
 - ORF10
 
-> El gen ORF1ab ocupa aproxiamdamente dos terceras partes del genoma y codifica proteínas involucradas en la replicación viral. Los genes S,E,M y N codifican las pricipales proteínas estructurales del virus.
-El gen S es particularmente importante porque produce la proteína Spike, la responsable de la entreda del virus a las células mediante interacción con el receptor ACE2. Debido a su papel en la infección y en la respuesta inmunitaria, esta región presenta numerosas mutaciones asociadas con variantes de interés
+> El gen ORF1ab ocupa aproximadamente dos terceras partes del genoma y codifica proteínas involucradas en la replicación viral. Los genes S,E,M y N codifican las principales proteínas estructurales del virus.
+El gen S es particularmente importante porque produce la proteína Spike, la responsable de la entrada del virus a las células mediante interacción con el receptor ACE2. Debido a su papel en la infección y en la respuesta inmunitaria, esta región presenta numerosas mutaciones asociadas con variantes de interés
 
-```{r}
-
-
-```
 
 ## Hipótesis
 
-> Las secuencias del gen Spike del SARS-CoV-2 obtenidas en México durante 2021 compartirán mutaciones no sinónimas características con secuencias provenientes de Estados Unidos, Reino Unido, China y Brasil del mismo periodo, indicando la circulación internacional de lineajes virales relacionados. Sin embargo, también se obsevarán diferencias regionales asociadas a la prevalencia local de variantes específicas.
+> Las secuencias del gen Spike del SARS-CoV-2 obtenidas en México durante 2021 presentarán diferencias en aminoácidos características con secuencias provenientes de Estados Unidos, Reino Unido, China y Brasil del mismo periodo, indicando la circulación internacional de lineajes virales relacionados. Sin embargo, también se observarán diferencias regionales asociadas a la prevalencia local de variantes específicas.
 
-```{r}
-
-```
 
 ## Procesamiento de datos
 
-### Datos a utilizar
+```{r}
+library(seqinr)
 
+mexico <- read.fasta("data/mexico_S_2021.fasta")
+usa <- read.fasta("data/usa_S_2021.fasta")
+uk <- read.fasta("data/uk_S_2021.fasta")
+china <- read.fasta("data/china_S_2021.fasta")
+brazil <- read.fasta("data/brazil_S_2021.fasta")
+```
+
+
+### Datos a utilizar
+> Se descargaron secuencias de la proteína Spike (S) del SARS-CoV-2 desde la base de datos NCBI Virus. Se seleccionaron cinco secuencias de México, Estados Unidos, Reino Unido, China y Brasil correspondientes al año 2021. Todas las secuencias fueron obtenidas en formato FASTA e importadas a R para su análisis comparativo.
 
 ### Procedimiento general
+> Las secuencias fueron organizadas por país y almacenadas en archivos FASTA independientes. Posteriormente se utilizó la librería seqinr para importar las secuencias a R. Se verificó el número de secuencias cargadas por país y la longitud de las proteínas Spike para asegurar la correcta importación de los datos. Finalmente, las secuencias fueron comparadas para identificar diferencias asociadas a posibles mutaciones.
 
+### Construcción del dataframe
+```{r}
+datos <- data.frame(
+  Pais = c("México","Estados Unidos","Reino Unido",
+           "China","Brasil"),
+  Longitud = c(
+    length(mexico[[1]]),
+    length(usa[[1]]),
+    length(uk[[1]]),
+    length(china[[1]]),
+    length(brazil[[1]])
+  )
+)
+
+datos
+```
+
+> Se construyó un dataframe denominado "datos", el cual almacena el país de origen de cada secuencia y la longitud de una proteína Spike representativa. Este dataframe se utilizó para generar tablas y gráficas comparativas que permitieron resumir la información obtenida de las secuencias descargadas.
+
+> El flujo de información consistió en la descarga de secuencias Spike desde NCBI Virus, su almacenamiento en archivos FASTA, la importación a R mediante seqinr y la construcción de data frames para resumir longitudes y diferencias entre secuencias. Posteriormente se generaron tablas y gráficas para visualizar los resultados obtenidos.
 
 ## Resultados 
 
-### Número de secuencias analizadas
+### Dataframe generado
+```{r}
+datos
+```
 
+### Número de secuencias analizadas
 ```{r}
 data.frame(
   Pais = c("México","Estados Unidos","Reino Unido","China","Brasil"),
@@ -67,8 +96,212 @@ data.frame(
 )
 ```
 
+### Longitud de las secuencias analizadas
+```{r}
+data.frame(
+  Pais = c("México","Estados Unidos","Reino Unido",
+           "China","Brasil"),
+  Longitud = c(
+    length(mexico[[1]]),
+    length(usa[[1]]),
+    length(uk[[1]]),
+    length(china[[1]]),
+    length(brazil[[1]])
+  )
+)
+```
+
+> Las secuencias Spike analizadas presentaron longitudes entre 1270 y 1273 aminoácidos. Estas diferencias son pequeñas y sugieren que la estructura general de la proteína Spike se conserva entre las distintas regiones estudiadas.
+
+
+### Comparación de una región de la proteína Spike
+```{r}
+head(data.frame(
+  Posicion = 1:50,
+  Mexico = mexico[[1]][1:50],
+  USA = usa[[1]][1:50],
+  UK = uk[[1]][1:50],
+  China = china[[1]][1:50],
+  Brazil = brazil[[1]][1:50]
+), 20)
+```
+
+### Comparación de longitudes
+```{r}
+longitudes <- c(
+  length(mexico[[1]]),
+  length(usa[[1]]),
+  length(uk[[1]]),
+  length(china[[1]]),
+  length(brazil[[1]])
+)
+
+library(ggplot2)
+
+ggplot(datos, aes(x = Pais, y = Longitud, fill = Pais)) +
+  geom_col() +
+  scale_fill_manual(values = c(
+    "México" = "green",
+    "Estados Unidos" = "blue",
+    "Reino Unido" = "red",
+    "China" = "gold",
+    "Brasil" = "darkgreen"
+  )) +
+  labs(
+    title = "Longitud de las proteínas Spike analizadas",
+    x = "País",
+    y = "Longitud (aminoácidos)"
+  )
+```
+
+> Todas las secuencias analizadas presentaron longitudes cercanas a los 1273 aminoácidos, valor esperado para la proteína Spike del SARS-CoV-2. Las pequeñas diferencias observadas pueden deberse a regiones no determinadas o información faltante en algunas secuencias.
+
+### Comparación de aminoácidos entre México y China
+```{r}
+comparacion_MC <- data.frame(
+  Posicion = which(mexico[[1]] != china[[1]]),
+  Mexico = mexico[[1]][which(mexico[[1]] != china[[1]])],
+  China = china[[1]][which(mexico[[1]] != china[[1]])]
+)
+
+comparacion_MC
+```
+
+> Se identificaron 22 diferencias entre las secuencias de México y China. Una parte importante de estas diferencias corresponde a posiciones marcadas como aminoácidos desconocidos (X), mientras que otras representan posibles cambios reales en la proteína Spike. Por ello, los resultados deben interpretarse considerando la calidad de las secuencias disponibles.
+
+### Alineación de secuencias
+```{r}
+gen = mexico[[1]][300:315]
+gen2 = china[[1]][300:315]
+gen = c(" ", gen)
+gen2 = c(" ", gen2)
+
+m = matrix(data=0, nrow=length(gen2), ncol=length(gen))
+m[1, ] = seq(0, -2*(length(gen)-1), -2)
+m[ ,1] = seq(0, -2*(length(gen2)-1), -2)
+for (fila in seq(2,length(gen2))){
+  for (col in seq(2,length(gen))){
+    if (gen[col]==gen2[fila]){
+      d = m[fila-1,col-1] + 1 #match
+    }else{
+      d = m[fila-1,col-1] - 1 #missmatch
+    }
+    up = m[fila-1, col] - 2
+    left = m[fila, col-1] - 2
+    peso = max(d, up, left)
+    m[fila,col] = peso
+  }
+}
+
+cat("\n")
+cat("Matriz:\n")
+
+fila = nrow(m)
+col = ncol(m)
+
+alineacion1 = c()
+alineacion2 = c()
+
+while(fila > 1 || col > 1){
+  if(fila > 1 && col > 1){
+    if(gen[col] == gen2[fila]){
+      d = m[fila-1,col-1] + 1
+    }else{
+      d = m[fila-1,col-1] - 1
+    }
+  }else{
+    d = -9999
+  }
+  
+  if(fila > 1){
+    up = m[fila-1,col] - 2
+  }else{
+    up = -9999
+  }
+  
+  if(col > 1){
+    left = m[fila,col-1] - 2
+  }else{
+    left = -9999
+  }
+  
+  if(fila > 1 && col > 1 && m[fila,col] == d){
+    alineacion1 = c(gen[col], alineacion1)
+    alineacion2 = c(gen2[fila], alineacion2)
+    fila = fila - 1
+    col = col - 1
+  }else if(col > 1 && m[fila,col] == left){
+    alineacion1 = c(gen[col], alineacion1)
+    alineacion2 = c("_", alineacion2)
+    col = col - 1
+  }else{
+    alineacion1 = c("_", alineacion1)
+    alineacion2 = c(gen2[fila], alineacion2)
+    fila = fila - 1
+  }
+}
+
+resultado = rbind(
+  alineacion1,
+  alineacion2
+)
+
+cat("Resultado:\n")
+m
+print(resultado)
+```
+
+> Se realizó una alineación global entre un fragmento de las secuencias Spike de México y China utilizando el algoritmo Needleman-Wunsch con puntuaciones de +1 para coincidencias, -1 para diferencias y -2 para gaps. La alineación permitió identificar posiciones conservadas y regiones donde existen diferencias entre ambas secuencias.
+
+
+### Comparación del número de diferencias observadas
+```{r}
+mutaciones <- data.frame(
+  Pais = c("China","Brasil"),
+  Diferencias = c(
+    sum(mexico[[1]] != china[[1]]),
+    sum(mexico[[1]] != brazil[[1]])
+  )
+)
+
+ggplot(mutaciones,
+       aes(x = Pais,
+           y = Diferencias,
+           fill = Pais)) +
+  geom_col() +
+  labs(
+    title = "Diferencias observadas respecto a México",
+    x = "País",
+    y = "Número de diferencias"
+  )
+```
+
+> La secuencia de Brasil presentó un número ligeramente mayor de diferencias respecto a la secuencia de México que la observada para China. Esto sugiere la presencia de variaciones regionales en la proteína Spike, aunque la mayoría de la secuencia permanece conservada.
+
+```{r}
+resumen <- data.frame(
+  Comparacion = c(
+    "México-China",
+    "México-Brasil"
+  ),
+  Diferencias = c(
+    sum(mexico[[1]] != china[[1]]),
+    sum(mexico[[1]] != brazil[[1]])
+  )
+)
+
+resumen
+```
+
+> Brasil presentó 28 diferencias respecto a México, mientras que China presentó 22 diferencias. Esto indica que la secuencia analizada de China mostró una mayor similitud con la secuencia mexicana que la secuencia analizada de Brasil.
 
 ## Conclusiones
+
+> Los resultados mostraron que las secuencias de la proteína Spike obtenidas en México durante 2021 presentan diferencias con las secuencias analizadas de Estados Unidos, Reino Unido, China y Brasil. Sin embargo, la longitud general de la proteína se mantuvo muy similar entre todas las regiones estudiadas, lo que indica una alta conservación estructural de la proteína Spike a pesar de la presencia de mutaciones.
+
+> La comparación entre las secuencias de México y China permitió identificar 22 diferencias en aminoácidos, mientras que la comparación entre México y Brasil mostró un número ligeramente mayor de diferencias. Además, mediante la alineación global utilizando el algoritmo Needleman-Wunsch fue posible observar regiones conservadas y posiciones donde ocurrieron cambios o gaps, evidenciando el proceso evolutivo del virus. Algunas diferencias correspondieron a aminoácidos desconocidos (X), por lo que no todas pueden interpretarse directamente como mutaciones biológicas.
+
+> Estos resultados sugieren que durante 2021 el SARS-CoV-2 continuó acumulando cambios en la proteína Spike conforme circulaba en distintas regiones del mundo. Debido a que esta proteína participa directamente en el reconocimiento del receptor ACE2 y en la entrada del virus a las células humanas, las mutaciones presentes en ella pueden influir en características como la transmisibilidad viral o la capacidad de evasión inmunológica. En conjunto, los resultados apoyan la idea de que la evolución del SARS-CoV-2 durante la pandemia estuvo acompañada por la aparición de variaciones regionales, aunque conservando gran parte de la estructura funcional de la proteína Spike.
 
 ## Referencias
 
